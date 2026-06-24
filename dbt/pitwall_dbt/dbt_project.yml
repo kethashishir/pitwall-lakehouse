@@ -1,0 +1,16 @@
+name: pitwall_dbt
+version: "1.0.0"
+config-version: 2
+
+profile: pitwall_dbt
+
+model-paths: ["models"]
+
+models:
+  pitwall_dbt:
+    bronze:
+      +materialized: view
+    silver:
+      +materialized: table
+    gold:
+      +materialized: table

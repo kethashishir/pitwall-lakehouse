@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 3: raw-to-bronze ingestion with manifests.
+Phase 4: dbt foundation for bronze, silver, and gold models.
 
 Implemented:
 
@@ -40,6 +40,10 @@ Implemented:
 - raw-to-bronze Parquet conversion
 - JSON ingestion manifest generation
 - raw-to-bronze row-count reconciliation tests
+- dbt project using DuckDB
+- bronze views over Parquet
+- silver canonical dimensions and facts
+- first gold analytics marts
 
 Not implemented yet:
 
@@ -139,3 +143,29 @@ python -m pitwall.ingestion.raw_to_bronze \
 ~~~
 
 The generated Parquet files are local artifacts and are not committed.
+
+## dbt transformation layer
+
+Build fixture bronze files first:
+
+~~~bash
+make build-fixture-bronze
+~~~
+
+Install dbt packages:
+
+~~~bash
+dbt deps --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+~~~
+
+Validate the dbt profile:
+
+~~~bash
+make dbt-debug
+~~~
+
+Run dbt models and tests:
+
+~~~bash
+make dbt-build
+~~~

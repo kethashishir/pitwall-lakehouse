@@ -46,3 +46,11 @@ metadata/run_logs/*
 dist/
 build/
 *.egg-info/
+
+# dbt generated artifacts
+dbt/**/target/
+dbt/**/logs/
+dbt/**/.user.yml
+
+# dbt dependency packages
+dbt/**/dbt_packages/

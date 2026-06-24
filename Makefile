@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build build-fixture-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -7,6 +7,9 @@ help:
 	@echo "  make lint      Run ruff lint checks"
 	@echo "  make format    Format Python code with ruff"
 	@echo "  make check     Run lint and tests"
+	@echo "  make build-fixture-bronze  Build bronze Parquet from test fixture"
+	@echo "  make dbt-debug Run dbt debug against local DuckDB profile"
+	@echo "  make dbt-build Run dbt build against local DuckDB profile"
 	@echo "  make tree      Show project tree"
 	@echo "  make clean     Remove local caches"
 
@@ -25,6 +28,20 @@ format:
 	ruff check --fix src tests
 
 check: lint test
+
+build-fixture-bronze:
+	python -m pitwall.ingestion.raw_to_bronze \
+		--raw-dir tests/fixtures/raw/racedata_sample \
+		--bronze-dir data/bronze/racedata_sample \
+		--manifest-dir metadata/ingestion_manifests \
+		--source-name racedata_sample
+
+dbt-debug:
+	dbt debug --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+
+dbt-build:
+	dbt build --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+
 
 tree:
 	find . -maxdepth 4 \

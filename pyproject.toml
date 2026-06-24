@@ -10,6 +10,7 @@ dependencies = [
     "pyarrow",
     "pydantic",
     "pydantic-settings",
+    "dbt-duckdb",
 ]
 
 [project.optional-dependencies]
