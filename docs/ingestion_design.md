@@ -95,3 +95,38 @@ Bronze conversion must:
 - No dbt models yet.
 - No Dagster orchestration yet.
 - No dashboard yet.
+
+## Phase 3 raw-to-bronze implementation
+
+The first ingestion implementation converts raw RaceData-style CSV files into bronze Parquet files.
+
+The module is intentionally local-first and works against the committed tiny fixture.
+
+Command shape:
+
+~~~bash
+python -m pitwall.ingestion.raw_to_bronze \
+  --raw-dir tests/fixtures/raw/racedata_sample \
+  --bronze-dir data/bronze/racedata_sample \
+  --manifest-dir metadata/ingestion_manifests \
+  --source-name racedata_sample
+~~~
+
+The generated manifest records:
+
+- run ID
+- source name
+- source URL
+- ingestion timestamp
+- raw directory
+- bronze directory
+- file names
+- raw paths
+- bronze paths
+- file sizes
+- SHA-256 checksums
+- raw row counts
+- bronze row counts
+- CSV columns
+
+The ingestion fails if an expected source file is missing or if raw-to-bronze row counts do not reconcile.
