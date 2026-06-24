@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 1: repository scaffold.
+Phase 2: source contract and tiny raw fixture.
 
 Implemented:
 
@@ -34,11 +34,14 @@ Implemented:
 - test/lint tooling
 - lakehouse directory layout
 - source assessment documentation
+- ingestion design documentation
+- tiny RaceData-style raw CSV fixture
+- source contract tests
 
 Not implemented yet:
 
-- data download
-- ingestion
+- full data download
+- production ingestion
 - Parquet conversion
 - dbt models
 - data quality checks
@@ -68,6 +71,10 @@ See:
 
 ~~~text
 docs/data_source_assessment.md
+
+~~~text
+docs/ingestion_design.md
+~~~
 ~~~
 
 ## Local development
