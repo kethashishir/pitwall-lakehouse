@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Local data artifacts
+data/raw/*
+data/bronze/*
+data/silver/*
+data/gold/*
+!data/raw/.gitkeep
+!data/bronze/.gitkeep
+!data/silver/.gitkeep
+!data/gold/.gitkeep
+
+# Generated metadata artifacts
+metadata/ingestion_manifests/*
+metadata/data_quality_reports/*
+metadata/run_logs/*
+!metadata/ingestion_manifests/.gitkeep
+!metadata/data_quality_reports/.gitkeep
+!metadata/run_logs/.gitkeep
+
+# DuckDB local files
+*.duckdb
+*.duckdb.wal
+
+# Build artifacts
+dist/
+build/
+*.egg-info/

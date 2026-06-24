@@ -1,0 +1,35 @@
+[project]
+name = "pitwall-lakehouse"
+version = "0.1.0"
+description = "A local-first Formula 1 analytics lakehouse for ingestion, transformation, data quality, and strategy marts."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "duckdb",
+    "pandas",
+    "pyarrow",
+    "pydantic",
+    "pydantic-settings",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = []
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
