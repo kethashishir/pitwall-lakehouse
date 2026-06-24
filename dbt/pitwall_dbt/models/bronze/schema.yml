@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: bronze__drivers
+    description: Source-preserved bronze view over drivers Parquet.
+    columns:
+      - name: driverId
+        tests:
+          - not_null
+          - unique
+
+  - name: bronze__constructors
+    description: Source-preserved bronze view over constructors Parquet.
+    columns:
+      - name: constructorId
+        tests:
+          - not_null
+          - unique
+
+  - name: bronze__circuits
+    description: Source-preserved bronze view over circuits Parquet.
+    columns:
+      - name: circuitId
+        tests:
+          - not_null
+          - unique
+
+  - name: bronze__races
+    description: Source-preserved bronze view over races Parquet.
+    columns:
+      - name: raceId
+        tests:
+          - not_null
+          - unique
+
+  - name: bronze__results
+    description: Source-preserved bronze view over race results Parquet.
+    columns:
+      - name: resultId
+        tests:
+          - not_null
+          - unique
+
+  - name: bronze__lap_times
+    description: Source-preserved bronze view over lap times Parquet.
+
+  - name: bronze__pit_stops
+    description: Source-preserved bronze view over pit stops Parquet.
+
+  - name: bronze__qualifying
+    description: Source-preserved bronze view over qualifying Parquet.
+
+  - name: bronze__seasons
+    description: Source-preserved bronze view over seasons Parquet.
+    columns:
+      - name: year
+        tests:
+          - not_null
+          - unique
+
+  - name: bronze__status
+    description: Source-preserved bronze view over result status Parquet.
+    columns:
+      - name: statusId
+        tests:
+          - not_null
+          - unique

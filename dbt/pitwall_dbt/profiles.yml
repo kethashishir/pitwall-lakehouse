@@ -1,0 +1,7 @@
+pitwall_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: data/pitwall.duckdb
+      threads: 4

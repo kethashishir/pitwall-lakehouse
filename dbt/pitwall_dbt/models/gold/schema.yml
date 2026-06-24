@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: mart_race_summary
+    description: Race-level summary mart for demo and analytics.
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_driver_pace
+    description: Driver race pace mart using lap-level timing data.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+
+  - name: mart_pit_stop_efficiency
+    description: Driver pit-stop efficiency mart using pit-stop duration data.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id

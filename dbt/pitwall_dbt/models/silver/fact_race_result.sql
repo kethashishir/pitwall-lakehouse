@@ -1,0 +1,20 @@
+select
+  cast(resultId as integer) as result_id,
+  cast(raceId as integer) as race_id,
+  cast(driverId as integer) as driver_id,
+  cast(constructorId as integer) as constructor_id,
+  nullif(number, '\\N') as car_number,
+  cast(grid as integer) as grid_position,
+  nullif(position, '\\N') as classified_position,
+  positionText as position_text,
+  cast(positionOrder as integer) as position_order,
+  cast(points as double) as points,
+  cast(laps as integer) as laps_completed,
+  nullif(time, '\\N') as result_time,
+  cast(nullif(milliseconds, '\\N') as bigint) as result_milliseconds,
+  cast(nullif(fastestLap, '\\N') as integer) as fastest_lap,
+  cast(nullif(rank, '\\N') as integer) as fastest_lap_rank,
+  nullif(fastestLapTime, '\\N') as fastest_lap_time,
+  cast(nullif(fastestLapSpeed, '\\N') as double) as fastest_lap_speed,
+  cast(statusId as integer) as status_id
+from {{ ref('bronze__results') }}

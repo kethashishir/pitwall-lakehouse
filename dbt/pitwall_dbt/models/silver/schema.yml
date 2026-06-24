@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: dim_driver
+    columns:
+      - name: driver_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_constructor
+    columns:
+      - name: constructor_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_circuit
+    columns:
+      - name: circuit_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_race
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - unique
+      - name: circuit_id
+        tests:
+          - relationships:
+              to: ref('dim_circuit')
+              field: circuit_id
+
+  - name: dim_status
+    columns:
+      - name: status_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_race_result
+    columns:
+      - name: result_id
+        tests:
+          - not_null
+          - unique
+      - name: race_id
+        tests:
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: constructor_id
+        tests:
+          - relationships:
+              to: ref('dim_constructor')
+              field: constructor_id
+      - name: status_id
+        tests:
+          - relationships:
+              to: ref('dim_status')
+              field: status_id
+
+  - name: fact_lap_time
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - lap_number
+    columns:
+      - name: race_id
+        tests:
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: lap_time_milliseconds
+        tests:
+          - not_null
+
+  - name: fact_pit_stop
+    columns:
+      - name: race_id
+        tests:
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: pit_duration_milliseconds
+        tests:
+          - not_null
