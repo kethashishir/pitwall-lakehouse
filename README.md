@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 2: source contract and tiny raw fixture.
+Phase 3: raw-to-bronze ingestion with manifests.
 
 Implemented:
 
@@ -37,11 +37,14 @@ Implemented:
 - ingestion design documentation
 - tiny RaceData-style raw CSV fixture
 - source contract tests
+- raw-to-bronze Parquet conversion
+- JSON ingestion manifest generation
+- raw-to-bronze row-count reconciliation tests
 
 Not implemented yet:
 
 - full data download
-- production ingestion
+- full production ingestion from downloaded source archive
 - Parquet conversion
 - dbt models
 - data quality checks
@@ -122,3 +125,17 @@ Non-goals for the early phases:
 - no LLM/RAG
 - no frontend-first development
 - no full historical telemetry
+
+## Raw-to-bronze fixture ingestion
+
+Run fixture raw-to-bronze ingestion:
+
+~~~bash
+python -m pitwall.ingestion.raw_to_bronze \
+  --raw-dir tests/fixtures/raw/racedata_sample \
+  --bronze-dir data/bronze/racedata_sample \
+  --manifest-dir metadata/ingestion_manifests \
+  --source-name racedata_sample
+~~~
+
+The generated Parquet files are local artifacts and are not committed.
