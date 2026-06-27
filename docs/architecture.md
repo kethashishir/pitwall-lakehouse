@@ -37,3 +37,24 @@ The first gold marts are:
 - mart_race_summary
 - mart_driver_pace
 - mart_pit_stop_efficiency
+
+## Data-quality evidence
+
+dbt build produces JSON artifacts under the dbt target directory.
+
+The project parses `run_results.json` to generate local data-quality reports under:
+
+~~~text
+metadata/data_quality_reports/
+~~~
+
+The current report summarizes:
+
+- total dbt results
+- status counts
+- resource type counts
+- failed checks
+- source artifact path
+- generated timestamp
+
+GX Core remains a later option for richer expectation suites and static Data Docs.
