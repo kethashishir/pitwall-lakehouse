@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 4: dbt foundation for bronze, silver, and gold models.
+Phase 5: dbt data-quality reporting from build artifacts.
 
 Implemented:
 
@@ -44,6 +44,7 @@ Implemented:
 - bronze views over Parquet
 - silver canonical dimensions and facts
 - first gold analytics marts
+- generated dbt data-quality summary reports
 
 Not implemented yet:
 
@@ -169,3 +170,19 @@ Run dbt models and tests:
 ~~~bash
 make dbt-build
 ~~~
+
+## Data-quality report
+
+After running dbt build, generate a readable quality summary:
+
+~~~bash
+make quality-report
+~~~
+
+Generated reports are written locally under:
+
+~~~text
+metadata/data_quality_reports/
+~~~
+
+These reports are generated artifacts and are not committed.

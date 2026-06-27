@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build build-fixture-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build quality-report build-fixture-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -41,6 +41,11 @@ dbt-debug:
 
 dbt-build:
 	dbt build --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+
+quality-report:
+	python -m pitwall.quality.dbt_quality_report \
+		--artifact-path dbt/pitwall_dbt/target/run_results.json \
+		--output-dir metadata/data_quality_reports
 
 
 tree:
