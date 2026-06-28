@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 5: dbt data-quality reporting from build artifacts.
+Phase 6: Dagster orchestration for the local lakehouse pipeline.
 
 Implemented:
 
@@ -45,6 +45,7 @@ Implemented:
 - silver canonical dimensions and facts
 - first gold analytics marts
 - generated dbt data-quality summary reports
+- Dagster assets for bronze ingestion, dbt build, and quality reporting
 
 Not implemented yet:
 
@@ -186,3 +187,25 @@ metadata/data_quality_reports/
 ~~~
 
 These reports are generated artifacts and are not committed.
+
+## Dagster orchestration
+
+List local Dagster assets:
+
+~~~bash
+make dagster-list
+~~~
+
+Materialize the local lakehouse pipeline:
+
+~~~bash
+make dagster-materialize
+~~~
+
+Launch the local Dagster UI:
+
+~~~bash
+make dagster-dev
+~~~
+
+The Dagster UI is for local development and observability only. Generated Dagster artifacts are not committed.
