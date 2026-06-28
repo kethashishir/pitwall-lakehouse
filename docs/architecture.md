@@ -58,3 +58,23 @@ The current report summarizes:
 - generated timestamp
 
 GX Core remains a later option for richer expectation suites and static Data Docs.
+
+## Orchestration layer
+
+Dagster orchestrates the local lakehouse pipeline.
+
+Initial Dagster assets:
+
+- bronze_racedata_fixture
+- dbt_lakehouse_build
+- dbt_quality_summary
+
+The first orchestration implementation intentionally uses simple Python assets instead of advanced dbt asset auto-loading. This keeps the workflow understandable while the project is still local and fixture-based.
+
+Current orchestrated flow:
+
+~~~text
+bronze_racedata_fixture
+  -> dbt_lakehouse_build
+  -> dbt_quality_summary
+~~~

@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build quality-report build-fixture-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build quality-report dagster-list dagster-materialize dagster-dev build-fixture-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -46,6 +46,15 @@ quality-report:
 	python -m pitwall.quality.dbt_quality_report \
 		--artifact-path dbt/pitwall_dbt/target/run_results.json \
 		--output-dir metadata/data_quality_reports
+
+dagster-list:
+	dagster asset list -m orchestration.dagster_project.definitions
+
+dagster-materialize:
+	dagster asset materialize --select "*" -m orchestration.dagster_project.definitions
+
+dagster-dev:
+	dagster dev -m orchestration.dagster_project.definitions
 
 
 tree:

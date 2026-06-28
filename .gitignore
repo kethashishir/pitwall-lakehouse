@@ -54,3 +54,6 @@ dbt/**/.user.yml
 
 # dbt dependency packages
 dbt/**/dbt_packages/
+
+# Dagster local artifacts
+.dagster/
