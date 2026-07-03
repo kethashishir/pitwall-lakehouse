@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 6: Dagster orchestration for the local lakehouse pipeline.
+Phase 7: expanded gold strategy and quality marts.
 
 Implemented:
 
@@ -46,6 +46,7 @@ Implemented:
 - first gold analytics marts
 - generated dbt data-quality summary reports
 - Dagster assets for bronze ingestion, dbt build, and quality reporting
+- expanded gold marts for reliability, strategy windows, stint degradation, and row-count summaries
 
 Not implemented yet:
 
@@ -209,3 +210,19 @@ make dagster-dev
 ~~~
 
 The Dagster UI is for local development and observability only. Generated Dagster artifacts are not committed.
+
+## Gold analytics marts
+
+Current gold marts include:
+
+~~~text
+mart_race_summary
+mart_driver_pace
+mart_pit_stop_efficiency
+mart_constructor_reliability
+mart_strategy_windows
+mart_stint_degradation
+mart_data_quality_run_summary
+~~~
+
+These marts are currently validated against the tiny fixture. They prove the transformation structure, not full historical F1 conclusions yet.

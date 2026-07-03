@@ -24,3 +24,77 @@ models:
           combination_of_columns:
             - race_id
             - driver_id
+
+  - name: mart_constructor_reliability
+    description: Constructor season reliability summary based on classified result status.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - constructor_id
+    columns:
+      - name: season
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+      - name: finish_rate
+        tests:
+          - not_null
+
+  - name: mart_strategy_windows
+    description: Pit-stop timing windows by race and driver.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - stop_number
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: pit_lap
+        tests:
+          - not_null
+
+  - name: mart_stint_degradation
+    description: Inferred stint-level lap-time degradation summary.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - stint_number
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: stint_number
+        tests:
+          - not_null
+
+  - name: mart_data_quality_run_summary
+    description: Row-count summary across bronze, silver, and gold models.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - layer
+            - model_name
+    columns:
+      - name: layer
+        tests:
+          - not_null
+      - name: model_name
+        tests:
+          - not_null
+      - name: row_count
+        tests:
+          - not_null
