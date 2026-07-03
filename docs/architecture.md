@@ -78,3 +78,19 @@ bronze_racedata_fixture
   -> dbt_lakehouse_build
   -> dbt_quality_summary
 ~~~
+
+## Gold mart expansion
+
+Phase 7 expands the trusted gold layer.
+
+Gold marts now cover:
+
+- race summaries
+- driver pace
+- pit-stop efficiency
+- constructor reliability
+- pit strategy windows
+- inferred stint degradation
+- row-count summaries across bronze, silver, and gold
+
+The current marts run against the committed fixture. Full historical analysis requires the production source archive ingestion phase.
