@@ -159,3 +159,20 @@ The dbt asset passes the selected dataset into dbt using:
 ~~~
 
 This keeps orchestration aligned with both fast fixture builds and real production RaceData builds.
+
+## CI strategy
+
+The CI workflow validates the fast fixture path.
+
+CI runs:
+
+~~~text
+make install
+make check
+make build-fixture-bronze
+dbt deps
+make dbt-build-fixture
+make quality-report
+~~~
+
+The production RaceData download path is verified locally, not in CI. This keeps CI reliable, fast, and independent of large public data downloads.
