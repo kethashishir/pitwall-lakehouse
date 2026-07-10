@@ -188,3 +188,15 @@ This keeps CI and local builds cleaner and avoids deprecated top-level generic-t
 The fixture CI workflow uploads the generated quality report and dbt `run_results.json`.
 
 This preserves data-quality evidence from CI runs without committing generated metadata artifacts to Git.
+
+## CI Dagster validation
+
+CI validates the fixture Dagster path.
+
+The workflow runs:
+
+~~~text
+make dagster-materialize-fixture
+~~~
+
+This checks that orchestration works independently of manual dbt commands while keeping production RaceData downloads out of CI.
