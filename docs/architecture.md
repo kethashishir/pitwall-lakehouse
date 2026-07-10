@@ -142,3 +142,20 @@ These models support the data-quality story:
 - bronze-to-silver row-count differences are explained
 
 The silver layer can clean and deduplicate data while the audit layer preserves evidence of what was changed.
+
+## Dagster dataset modes
+
+The Dagster asset graph is dataset-aware.
+
+The bronze asset checks `PITWALL_BRONZE_DATASET` and materializes either:
+
+- `racedata_sample`
+- `racedata_latest`
+
+The dbt asset passes the selected dataset into dbt using:
+
+~~~text
+--vars {"bronze_dataset": "<dataset>"}
+~~~
+
+This keeps orchestration aligned with both fast fixture builds and real production RaceData builds.
