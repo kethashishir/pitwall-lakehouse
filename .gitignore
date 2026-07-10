@@ -60,3 +60,7 @@ dbt/**/dbt_packages/
 
 # Streamlit local config
 .streamlit/
+
+# Temporary Dagster homes
+.tmp_dagster_home*
+.tmp_dagster*
