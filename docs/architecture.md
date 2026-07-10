@@ -182,3 +182,9 @@ The production RaceData download path is verified locally, not in CI. This keeps
 dbt relationship tests use the `arguments:` property for generic test arguments.
 
 This keeps CI and local builds cleaner and avoids deprecated top-level generic-test argument syntax.
+
+## CI quality artifacts
+
+The fixture CI workflow uploads the generated quality report and dbt `run_results.json`.
+
+This preserves data-quality evidence from CI runs without committing generated metadata artifacts to Git.
