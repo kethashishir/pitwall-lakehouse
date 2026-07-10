@@ -26,18 +26,22 @@ OPTIONAL_ARTIFACTS = {
     "quality report markdown": Path("metadata/data_quality_reports/latest_dbt_quality_summary.md"),
 }
 
-GENERATED_PATTERNS = [
-    "data/raw/*",
-    "data/bronze/*",
-    "metadata/ingestion_manifests/*",
-    "metadata/data_quality_reports/*",
-    "dbt/pitwall_dbt/target",
-    "dbt/pitwall_dbt/logs",
-    "dbt/pitwall_dbt/dbt_packages",
-    ".dagster",
-    ".streamlit",
-    ".tmp_dagster_home*",
-]
+GENERATED_PATTERN_GROUPS = {
+    "data/raw outputs": ["data/raw/*"],
+    "data/bronze outputs": ["data/bronze/*"],
+    "ingestion manifests": ["metadata/ingestion_manifests/*"],
+    "quality reports": ["metadata/data_quality_reports/*"],
+    "dbt target": ["dbt/pitwall_dbt/target", "dbt/**/target", "dbt/**/target/"],
+    "dbt logs": ["dbt/pitwall_dbt/logs", "dbt/**/logs", "dbt/**/logs/"],
+    "dbt packages": [
+        "dbt/pitwall_dbt/dbt_packages",
+        "dbt/**/dbt_packages",
+        "dbt/**/dbt_packages/",
+    ],
+    "dagster local state": [".dagster"],
+    "streamlit local state": [".streamlit"],
+    "temporary dagster home": [".tmp_dagster_home*", ".tmp_dagster*"],
+}
 
 
 def check_required_paths() -> list[HealthCheck]:
@@ -82,12 +86,13 @@ def check_gitignore_patterns() -> list[HealthCheck]:
         )
     ]
 
-    for pattern in GENERATED_PATTERNS:
+    for name, acceptable_patterns in GENERATED_PATTERN_GROUPS.items():
+        matched_patterns = [pattern for pattern in acceptable_patterns if pattern in text]
         checks.append(
             HealthCheck(
-                name=f"gitignore pattern: {pattern}",
-                passed=pattern in text,
-                detail=pattern,
+                name=f"gitignore coverage: {name}",
+                passed=bool(matched_patterns),
+                detail=", ".join(matched_patterns) if matched_patterns else "missing",
             )
         )
 

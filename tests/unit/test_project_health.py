@@ -1,17 +1,17 @@
 from pitwall.health import (
-    GENERATED_PATTERNS,
+    GENERATED_PATTERN_GROUPS,
     HealthCheck,
     collect_health_checks,
     format_health_report,
 )
 
 
-def test_generated_patterns_cover_core_artifact_paths() -> None:
-    assert "data/raw/*" in GENERATED_PATTERNS
-    assert "data/bronze/*" in GENERATED_PATTERNS
-    assert "metadata/data_quality_reports/*" in GENERATED_PATTERNS
-    assert "dbt/pitwall_dbt/target" in GENERATED_PATTERNS
-    assert ".tmp_dagster_home*" in GENERATED_PATTERNS
+def test_generated_pattern_groups_cover_core_artifact_paths() -> None:
+    assert "data/raw/*" in GENERATED_PATTERN_GROUPS["data/raw outputs"]
+    assert "data/bronze/*" in GENERATED_PATTERN_GROUPS["data/bronze outputs"]
+    assert "metadata/data_quality_reports/*" in GENERATED_PATTERN_GROUPS["quality reports"]
+    assert "dbt/**/target" in GENERATED_PATTERN_GROUPS["dbt target"]
+    assert ".tmp_dagster_home*" in GENERATED_PATTERN_GROUPS["temporary dagster home"]
 
 
 def test_collect_health_checks_returns_expected_checks() -> None:
