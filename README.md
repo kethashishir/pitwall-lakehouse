@@ -405,3 +405,13 @@ docs/release_checklist.md
 ~~~
 
 Use it before tagging or publicly launching the project.
+
+## Release candidate verification
+
+Release-candidate verification notes are available at:
+
+~~~text
+docs/release_candidate_verification.md
+~~~
+
+Use this before tagging `v1.0.0`.
