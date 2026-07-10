@@ -24,6 +24,14 @@ GOLD_TABLES = {
 }
 
 
+AUDIT_TABLES = {
+    "Duplicate Lap-Time Grain": "audit_lap_time_duplicate_grain",
+    "Missing Pit-Stop Duration": "audit_pit_stop_missing_duration",
+    "Nullable Result Numeric Fields": "audit_result_nullable_numeric_fields",
+    "Bronze-to-Silver Row Counts": "audit_source_to_silver_row_counts",
+}
+
+
 def format_milliseconds(value: float | int | None) -> str:
     """Format milliseconds for display."""
 
@@ -50,14 +58,16 @@ def load_quality_report(path: Path = QUALITY_REPORT_PATH) -> dict:
 
 @st.cache_data(show_spinner=False)
 def query_table(table_name: str, limit: int = 500) -> pd.DataFrame:
-    """Read a trusted gold table from DuckDB."""
+    """Read a trusted mart or audit table from DuckDB."""
 
-    if table_name not in GOLD_TABLES.values():
+    allowed_tables = set(GOLD_TABLES.values()) | set(AUDIT_TABLES.values())
+
+    if table_name not in allowed_tables:
         raise ValueError(f"Unsupported table requested: {table_name}")
 
     if not DUCKDB_PATH.exists():
         raise FileNotFoundError(
-            "DuckDB database not found. Run `make dagster-materialize` or `make dbt-build` first."
+            "DuckDB database not found. Run `make dagster-materialize` or `make dbt-build-latest` first."
         )
 
     with duckdb.connect(str(DUCKDB_PATH), read_only=True) as con:
@@ -86,8 +96,8 @@ def render_quality_summary(report: dict) -> None:
         st.warning("No dbt status counts found. Generate the quality report first.")
 
 
-def render_table_section(label: str, table_name: str) -> None:
-    """Render a gold table preview."""
+def render_table_section(label: str, table_name: str, caption_prefix: str) -> None:
+    """Render a table preview."""
 
     st.subheader(label)
 
@@ -97,11 +107,29 @@ def render_table_section(label: str, table_name: str) -> None:
         st.error(str(exc))
         return
 
-    st.caption(f"Trusted gold table: `{table_name}`")
+    st.caption(f"{caption_prefix}: `{table_name}`")
     st.dataframe(df, use_container_width=True, hide_index=True)
 
     if df.empty:
-        st.warning("This mart is empty for the current fixture data.")
+        st.warning("This table is empty for the current dataset.")
+
+
+def render_audit_overview() -> None:
+    """Render audit evidence summary cards."""
+
+    st.markdown("### What the audit layer proves")
+    st.write(
+        "The silver layer can clean and deduplicate production source data, "
+        "while the audit layer preserves evidence of what was changed."
+    )
+
+    try:
+        row_counts = query_table("audit_source_to_silver_row_counts")
+    except FileNotFoundError as exc:
+        st.error(str(exc))
+        return
+
+    st.dataframe(row_counts, use_container_width=True, hide_index=True)
 
 
 def main() -> None:
@@ -114,12 +142,12 @@ def main() -> None:
     st.title("PitWall Lakehouse")
     st.caption(
         "Local-first Formula 1 lakehouse demo. "
-        "This app reads trusted gold marts and generated quality evidence only."
+        "This app reads trusted gold marts, audit models, and generated quality evidence."
     )
 
     st.warning(
-        "Current demo uses the tiny committed fixture. "
-        "The numbers prove pipeline behavior and model structure, not full historical F1 conclusions."
+        "If you are using fixture data, the numbers prove pipeline behavior only. "
+        "Run `make dbt-build-latest` to inspect production RaceData outputs."
     )
 
     report = load_quality_report()
@@ -128,9 +156,10 @@ def main() -> None:
         st.header("Demo controls")
         selected_section = st.radio(
             "Section",
-            ["Quality Evidence", "Gold Marts", "Portfolio Proof"],
+            ["Quality Evidence", "Gold Marts", "Audit Evidence", "Portfolio Proof"],
         )
-        selected_table_label = st.selectbox("Gold mart", list(GOLD_TABLES.keys()))
+        selected_gold_label = st.selectbox("Gold mart", list(GOLD_TABLES.keys()))
+        selected_audit_label = st.selectbox("Audit table", list(AUDIT_TABLES.keys()))
 
     if selected_section == "Quality Evidence":
         st.header("Data-quality evidence")
@@ -144,7 +173,20 @@ def main() -> None:
 
     elif selected_section == "Gold Marts":
         st.header("Trusted gold outputs")
-        render_table_section(selected_table_label, GOLD_TABLES[selected_table_label])
+        render_table_section(
+            selected_gold_label,
+            GOLD_TABLES[selected_gold_label],
+            "Trusted gold table",
+        )
+
+    elif selected_section == "Audit Evidence":
+        st.header("Source anomaly audit evidence")
+        render_audit_overview()
+        render_table_section(
+            selected_audit_label,
+            AUDIT_TABLES[selected_audit_label],
+            "Audit table",
+        )
 
     else:
         st.header("Portfolio proof")
@@ -153,13 +195,15 @@ def main() -> None:
 This project currently demonstrates:
 
 - raw-to-bronze ingestion with manifests and checksums
+- production RaceData archive download
 - row-count reconciliation
 - DuckDB + Parquet local lakehouse storage
-- dbt bronze, silver, and gold transformations
+- dbt bronze, silver, gold, and audit transformations
 - dbt tests for keys, uniqueness, relationships, and mart grain
 - generated data-quality reports
+- explicit audit evidence for production data anomalies
 - Dagster orchestration
-- a Streamlit demo that reads only trusted gold outputs
+- a Streamlit demo that reads trusted outputs only
 
 The dashboard is intentionally thin. The data platform is the product.
 """

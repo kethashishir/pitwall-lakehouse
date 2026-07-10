@@ -29,3 +29,18 @@ Demo sections:
 3. Portfolio Proof
 
 The dashboard must avoid fake historical claims while the project is still running on the tiny fixture.
+
+## Audit evidence demo
+
+The Streamlit demo includes an Audit Evidence section.
+
+It reads dbt audit models from DuckDB:
+
+~~~text
+audit_lap_time_duplicate_grain
+audit_pit_stop_missing_duration
+audit_result_nullable_numeric_fields
+audit_source_to_silver_row_counts
+~~~
+
+This lets reviewers see production source anomalies and the row-count impact of silver cleaning decisions.
