@@ -12,7 +12,8 @@ RUN apt-get update \
         make \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml README.md ./
+COPY pyproject.toml README.md Dockerfile .dockerignore ./
+COPY .github ./.github
 COPY src ./src
 COPY tests ./tests
 COPY dbt ./dbt
