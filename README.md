@@ -270,3 +270,16 @@ bronze_dataset: racedata_sample
 ~~~
 
 This keeps local smoke tests fast while still supporting real public-data builds.
+
+## Audit models
+
+The project includes dbt audit models for production data anomalies:
+
+~~~text
+audit_lap_time_duplicate_grain
+audit_pit_stop_missing_duration
+audit_result_nullable_numeric_fields
+audit_source_to_silver_row_counts
+~~~
+
+These models make cleaning decisions explainable instead of silent.

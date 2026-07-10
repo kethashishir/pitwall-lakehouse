@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: audit_lap_time_duplicate_grain
+    description: Duplicate source rows at the race-driver-lap grain before silver deduplication.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - lap_number
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: lap_number
+        tests:
+          - not_null
+      - name: duplicate_row_count
+        tests:
+          - not_null
+
+  - name: audit_pit_stop_missing_duration
+    description: Source pit-stop rows where duration milliseconds are missing or invalid.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - stop_number
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: stop_number
+        tests:
+          - not_null
+
+  - name: audit_result_nullable_numeric_fields
+    description: Missing-value counts for nullable numeric fields in race results.
+    columns:
+      - name: field_name
+        tests:
+          - not_null
+          - unique
+      - name: source_row_count
+        tests:
+          - not_null
+      - name: missing_count
+        tests:
+          - not_null
+      - name: missing_rate
+        tests:
+          - not_null
+
+  - name: audit_source_to_silver_row_counts
+    description: Row-count comparison between bronze source tables and cleaned silver facts.
+    columns:
+      - name: dataset_name
+        tests:
+          - not_null
+          - unique
+      - name: bronze_row_count
+        tests:
+          - not_null
+      - name: silver_row_count
+        tests:
+          - not_null
+      - name: row_count_difference
+        tests:
+          - not_null

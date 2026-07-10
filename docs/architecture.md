@@ -120,3 +120,25 @@ The production RaceData build exposed source issues that were not visible in the
 Silver models use safer casting with `try_cast(nullif(..., '\\N'))`.
 
 `fact_lap_time` currently deduplicates repeated race-driver-lap rows deterministically by keeping the lowest lap-time milliseconds value, then lowest available position. A later quality phase should add a dedicated duplicate audit model/report so these source anomalies are visible instead of silently hidden.
+
+## Audit models
+
+The audit layer captures production source anomalies that should not be silently hidden.
+
+Current audit models:
+
+~~~text
+audit_lap_time_duplicate_grain
+audit_pit_stop_missing_duration
+audit_result_nullable_numeric_fields
+audit_source_to_silver_row_counts
+~~~
+
+These models support the data-quality story:
+
+- duplicate lap-time source rows are visible
+- missing pit-stop duration rows are visible
+- nullable numeric result fields are measured
+- bronze-to-silver row-count differences are explained
+
+The silver layer can clean and deduplicate data while the audit layer preserves evidence of what was changed.
