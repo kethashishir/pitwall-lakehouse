@@ -208,3 +208,9 @@ Docker support is provided for reproducible fixture validation.
 Docker targets build the image, run Python checks, and execute the fixture dbt pipeline.
 
 Production RaceData download is intentionally not part of the default Docker workflow.
+
+## dbt generic-test syntax
+
+Silver relationship tests and gold mart grain tests use the `arguments:` property for generic test arguments.
+
+Gold mart grain checks rely on `dbt_utils.unique_combination_of_columns` with current dbt-compatible syntax.

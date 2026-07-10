@@ -314,3 +314,9 @@ make docker-fixture-pipeline
 Docker mode validates the reproducible fixture path. Production RaceData download remains a local workflow.
 
 Docker Desktop or another Docker runtime must be installed and available on `PATH` before running Docker targets.
+
+## dbt warning cleanup
+
+Silver relationship tests and gold mart grain tests use dbt's current `arguments:` syntax for generic test arguments.
+
+This keeps local, Docker, and CI dbt output free of avoidable generic-test deprecation warnings.
