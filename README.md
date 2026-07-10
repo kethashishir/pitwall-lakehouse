@@ -351,3 +351,27 @@ Relationship tests use:
 ~~~
 
 This avoids dbt generic-test deprecation warnings during local builds and CI.
+
+## Demo commands
+
+Fast fixture demo:
+
+~~~bash
+make demo-fixture
+~~~
+
+Production local demo:
+
+~~~bash
+make download-racedata
+make demo-latest
+~~~
+
+The production demo uses the latest downloaded RaceData snapshot and generated local DuckDB/dbt outputs.
+
+Additional demo docs:
+
+~~~text
+docs/demo_walkthrough.md
+docs/interview_talking_points.md
+~~~
