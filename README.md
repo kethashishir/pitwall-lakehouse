@@ -336,3 +336,18 @@ quality report generation
 ~~~
 
 Production RaceData download is intentionally not run in CI because it depends on external network/data size and should remain a local production-mode workflow.
+
+## dbt warning hygiene
+
+The project keeps dbt schema tests aligned with current generic-test syntax.
+
+Relationship tests use:
+
+~~~yaml
+- relationships:
+    arguments:
+      to: ref('some_model')
+      field: some_id
+~~~
+
+This avoids dbt generic-test deprecation warnings during local builds and CI.
