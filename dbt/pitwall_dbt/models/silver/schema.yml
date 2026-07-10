@@ -31,8 +31,9 @@ models:
       - name: circuit_id
         tests:
           - relationships:
-              to: ref('dim_circuit')
-              field: circuit_id
+              arguments:
+                to: ref('dim_circuit')
+                field: circuit_id
 
   - name: dim_status
     columns:
@@ -50,23 +51,27 @@ models:
       - name: race_id
         tests:
           - relationships:
-              to: ref('dim_race')
-              field: race_id
+              arguments:
+                to: ref('dim_race')
+                field: race_id
       - name: driver_id
         tests:
           - relationships:
-              to: ref('dim_driver')
-              field: driver_id
+              arguments:
+                to: ref('dim_driver')
+                field: driver_id
       - name: constructor_id
         tests:
           - relationships:
-              to: ref('dim_constructor')
-              field: constructor_id
+              arguments:
+                to: ref('dim_constructor')
+                field: constructor_id
       - name: status_id
         tests:
           - relationships:
-              to: ref('dim_status')
-              field: status_id
+              arguments:
+                to: ref('dim_status')
+                field: status_id
 
   - name: fact_lap_time
     tests:
@@ -79,13 +84,15 @@ models:
       - name: race_id
         tests:
           - relationships:
-              to: ref('dim_race')
-              field: race_id
+              arguments:
+                to: ref('dim_race')
+                field: race_id
       - name: driver_id
         tests:
           - relationships:
-              to: ref('dim_driver')
-              field: driver_id
+              arguments:
+                to: ref('dim_driver')
+                field: driver_id
       - name: lap_time_milliseconds
         tests:
           - not_null
@@ -95,13 +102,15 @@ models:
       - name: race_id
         tests:
           - relationships:
-              to: ref('dim_race')
-              field: race_id
+              arguments:
+                to: ref('dim_race')
+                field: race_id
       - name: driver_id
         tests:
           - relationships:
-              to: ref('dim_driver')
-              field: driver_id
+              arguments:
+                to: ref('dim_driver')
+                field: driver_id
       - name: pit_duration_milliseconds
         tests:
           - not_null

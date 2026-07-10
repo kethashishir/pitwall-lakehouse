@@ -176,3 +176,9 @@ make quality-report
 ~~~
 
 The production RaceData download path is verified locally, not in CI. This keeps CI reliable, fast, and independent of large public data downloads.
+
+## dbt warning hygiene
+
+dbt relationship tests use the `arguments:` property for generic test arguments.
+
+This keeps CI and local builds cleaner and avoids deprecated top-level generic-test argument syntax.
