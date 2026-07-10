@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build quality-report dagster-list dagster-materialize dagster-dev build-fixture-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build quality-report dagster-list dagster-materialize dagster-dev streamlit-demo build-fixture-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -55,6 +55,9 @@ dagster-materialize:
 
 dagster-dev:
 	dagster dev -m orchestration.dagster_project.definitions
+
+streamlit-demo:
+	python -m streamlit run dashboard/streamlit_app/app.py
 
 
 tree:
