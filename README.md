@@ -1,5 +1,13 @@
 # PitWall Lakehouse
 
+![CI](https://github.com/kethashishir/pitwall-lakehouse/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![dbt](https://img.shields.io/badge/dbt-duckdb-orange)
+![DuckDB](https://img.shields.io/badge/storage-DuckDB-yellow)
+![Dagster](https://img.shields.io/badge/orchestration-Dagster-purple)
+![Docker](https://img.shields.io/badge/docker-fixture--validated-blue)
+![Status](https://img.shields.io/badge/status-portfolio--ready-brightgreen)
+
 PitWall Lakehouse is a local-first Formula 1 data-engineering platform.
 
 It ingests public race data, builds a DuckDB/dbt lakehouse, exposes quality and audit evidence, orchestrates the pipeline with Dagster, validates the fixture path in CI, and serves trusted outputs through a Streamlit demo.
