@@ -35,6 +35,12 @@ PitWall Lakehouse is built to show data-engineering fundamentals:
 
 ## Architecture
 
+A visual architecture diagram is available at:
+
+~~~text
+docs/architecture_diagram.md
+~~~
+
 ~~~text
 Public RaceData archive
   -> timestamped raw snapshot
