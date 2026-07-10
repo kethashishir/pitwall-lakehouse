@@ -1,105 +1,95 @@
 # PitWall Lakehouse
 
-PitWall Lakehouse is a local-first Formula 1 data-engineering platform that ingests historical race data, validates and transforms it into trusted analytics marts, and exposes strategy, reliability, pace, and data-quality evidence through a polished demo.
+PitWall Lakehouse is a local-first Formula 1 data-engineering platform.
 
-## Project pitch
+It ingests public race data, builds a DuckDB/dbt lakehouse, exposes quality and audit evidence, orchestrates the pipeline with Dagster, validates the fixture path in CI, and serves trusted outputs through a Streamlit demo.
 
-Build an F1 analytics lakehouse that ingests historical race data plus selected modern telemetry/session data, validates and transforms it into trusted race-strategy marts, and exposes analytics, lineage, and data-quality evidence through a polished demo.
+The goal is not to build a flashy dashboard first. The goal is to prove a serious data platform:
+
+~~~text
+raw ingestion -> bronze Parquet -> silver cleaning -> audit evidence -> gold marts -> quality reports -> orchestration -> demo
+~~~
 
 ## Why this project exists
 
-This project is designed to demonstrate serious data-engineering skills:
+Most portfolio projects stop at a dashboard or a CRUD app.
+
+PitWall Lakehouse is built to show data-engineering fundamentals:
 
 - reproducible ingestion
-- raw, bronze, silver, and gold lakehouse layers
-- typed Parquet outputs
-- dbt transformations
-- data quality checks
-- orchestration
-- tests and CI
-- analytics marts
-- a small polished demo reading trusted gold outputs
-
-This is not intended to be a generic Formula 1 dashboard or CRUD app.
-
-## Current status
-
-Phase 8: Streamlit demo over trusted gold outputs.
-
-Implemented:
-
-- project structure
-- Python package skeleton
-- local configuration object
-- test/lint tooling
-- lakehouse directory layout
-- source assessment documentation
-- ingestion design documentation
-- tiny RaceData-style raw CSV fixture
-- source contract tests
-- raw-to-bronze Parquet conversion
-- JSON ingestion manifest generation
-- raw-to-bronze row-count reconciliation tests
-- dbt project using DuckDB
-- bronze views over Parquet
-- silver canonical dimensions and facts
-- first gold analytics marts
-- generated dbt data-quality summary reports
-- Dagster assets for bronze ingestion, dbt build, and quality reporting
-- expanded gold marts for reliability, strategy windows, stint degradation, and row-count summaries
-- Streamlit demo reading trusted gold outputs and quality reports
-
-Not implemented yet:
-
-- full data download
-- full production ingestion from downloaded source archive
-- Parquet conversion
-- dbt models
-- data quality checks
+- local lakehouse storage
+- bronze/silver/gold modeling
+- source anomaly auditing
+- dbt tests and quality reporting
 - Dagster orchestration
-- Streamlit dashboard
+- CI validation
+- a thin demo over trusted outputs
 
-## Planned architecture
-
-~~~text
-data/
-  raw/      source-preserved files and cached API responses
-  bronze/   typed source-preserved Parquet
-  silver/   normalized canonical F1 tables
-  gold/     analytics marts for strategy, pace, reliability, and quality
-
-metadata/
-  ingestion_manifests/
-  data_quality_reports/
-  run_logs/
-~~~
-
-## Initial data-source decision
-
-The project starts with TracingInsights RaceData as the primary historical CSV source because it is easier to reproduce locally and in CI than direct Kaggle access.
-
-See:
+## Architecture
 
 ~~~text
-docs/data_source_assessment.md
+Public RaceData archive
+  -> timestamped raw snapshot
+  -> bronze Parquet files
+  -> dbt bronze views
+  -> dbt silver facts and dimensions
+  -> dbt audit models
+  -> dbt gold marts
+  -> generated dbt quality report
+  -> Streamlit demo
+~~~
+
+Dagster materializes:
 
 ~~~text
-docs/ingestion_design.md
-~~~
+bronze_racedata
+  -> dbt_lakehouse_build
+  -> dbt_quality_summary
 ~~~
 
-## Local development
+## Tech stack
 
-Create and activate a virtual environment:
+- Python 3.11
+- DuckDB
+- Parquet
+- pandas
+- dbt-duckdb
+- Dagster
+- Streamlit
+- pytest
+- ruff
+- GitHub Actions
+
+## Data modes
+
+The project supports two local data modes.
+
+### Fixture mode
+
+`racedata_sample` is a tiny committed fixture used for fast tests, CI, and smoke demos.
 
 ~~~bash
-python3 -m venv .venv
+make demo-fixture
+~~~
+
+### Production mode
+
+`racedata_latest` is built from the latest locally downloaded public RaceData archive.
+
+~~~bash
+make download-racedata
+make demo-latest
+~~~
+
+Production data and generated artifacts are intentionally not committed.
+
+## Quick start
+
+Create and activate a virtual environment, then install the project.
+
+~~~bash
+python3.11 -m venv .venv
 source .venv/bin/activate
-~~~
-
-Install development dependencies:
-
-~~~bash
 make install
 ~~~
 
@@ -109,309 +99,194 @@ Run checks:
 make check
 ~~~
 
-## Project layout
-
-~~~text
-src/pitwall/          Python package code
-tests/                unit and integration tests
-docs/                 architecture and source documentation
-data/                 local lakehouse storage, ignored except .gitkeep files
-metadata/             generated manifests, quality reports, and logs
-dbt/                  future dbt project
-orchestration/        future Dagster project
-dashboard/            future Streamlit app
-~~~
-
-## Scope control
-
-Non-goals for the early phases:
-
-- no Kafka
-- no Spark
-- no Kubernetes
-- no paid APIs
-- no LLM/RAG
-- no frontend-first development
-- no full historical telemetry
-
-## Raw-to-bronze fixture ingestion
-
-Run fixture raw-to-bronze ingestion:
-
-~~~bash
-python -m pitwall.ingestion.raw_to_bronze \
-  --raw-dir tests/fixtures/raw/racedata_sample \
-  --bronze-dir data/bronze/racedata_sample \
-  --manifest-dir metadata/ingestion_manifests \
-  --source-name racedata_sample
-~~~
-
-The generated Parquet files are local artifacts and are not committed.
-
-## dbt transformation layer
-
-Build fixture bronze files first:
-
-~~~bash
-make build-fixture-bronze
-~~~
-
-Install dbt packages:
-
-~~~bash
-dbt deps --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
-~~~
-
-Validate the dbt profile:
-
-~~~bash
-make dbt-debug
-~~~
-
-Run dbt models and tests:
-
-~~~bash
-make dbt-build
-~~~
-
-## Data-quality report
-
-After running dbt build, generate a readable quality summary:
-
-~~~bash
-make quality-report
-~~~
-
-Generated reports are written locally under:
-
-~~~text
-metadata/data_quality_reports/
-~~~
-
-These reports are generated artifacts and are not committed.
-
-## Dagster orchestration
-
-List local Dagster assets:
-
-~~~bash
-make dagster-list
-~~~
-
-Materialize the local lakehouse pipeline:
-
-~~~bash
-make dagster-materialize
-~~~
-
-Launch the local Dagster UI:
-
-~~~bash
-make dagster-dev
-~~~
-
-The Dagster UI is for local development and observability only. Generated Dagster artifacts are not committed.
-
-## Gold analytics marts
-
-Current gold marts include:
-
-~~~text
-mart_race_summary
-mart_driver_pace
-mart_pit_stop_efficiency
-mart_constructor_reliability
-mart_strategy_windows
-mart_stint_degradation
-mart_data_quality_run_summary
-~~~
-
-These marts are currently validated against the tiny fixture. They prove the transformation structure, not full historical F1 conclusions yet.
-
-## Streamlit demo
-
-Before launching the demo, materialize the local pipeline:
-
-~~~bash
-make dagster-materialize
-~~~
-
-Then launch Streamlit:
-
-~~~bash
-make streamlit-demo
-~~~
-
-The demo reads only trusted gold tables and generated quality reports. It does not read raw CSVs directly.
-
-## Fixture vs production dbt builds
-
-The dbt bronze layer is parameterized with a `bronze_dataset` variable.
-
-Build against the committed tiny fixture:
-
-~~~bash
-make build-fixture-bronze
-make dbt-build-fixture
-~~~
-
-Build against the latest downloaded production RaceData bronze files:
-
-~~~bash
-make download-racedata
-make build-latest-racedata-bronze
-make dbt-build-latest
-~~~
-
-The default dbt project variable is:
-
-~~~text
-bronze_dataset: racedata_sample
-~~~
-
-This keeps local smoke tests fast while still supporting real public-data builds.
-
-## Audit models
-
-The project includes dbt audit models for production data anomalies:
-
-~~~text
-audit_lap_time_duplicate_grain
-audit_pit_stop_missing_duration
-audit_result_nullable_numeric_fields
-audit_source_to_silver_row_counts
-~~~
-
-These models make cleaning decisions explainable instead of silent.
-
-## Streamlit audit evidence
-
-The Streamlit demo includes an Audit Evidence section that reads dbt audit models from DuckDB.
-
-This makes production source anomalies visible in the demo instead of hiding them in the transformation logic.
-
-## Dagster dataset modes
-
-Dagster can materialize either the tiny fixture dataset or the latest downloaded production RaceData snapshot.
-
-Fixture mode:
-
-~~~bash
-make dagster-materialize-fixture
-~~~
-
-Production mode:
-
-~~~bash
-make download-racedata
-make dagster-materialize-latest
-~~~
-
-The selected dataset is controlled by:
-
-~~~text
-PITWALL_BRONZE_DATASET
-~~~
-
-Supported values:
-
-~~~text
-racedata_sample
-racedata_latest
-~~~
-
-## Continuous integration
-
-GitHub Actions runs the fixture pipeline on pushes and pull requests.
-
-CI validates:
-
-~~~text
-Python linting
-unit tests
-fixture raw-to-bronze ingestion
-dbt fixture build
-dbt tests
-quality report generation
-~~~
-
-Production RaceData download is intentionally not run in CI because it depends on external network/data size and should remain a local production-mode workflow.
-
-## dbt warning hygiene
-
-The project keeps dbt schema tests aligned with current generic-test syntax.
-
-Relationship tests use:
-
-~~~yaml
-- relationships:
-    arguments:
-      to: ref('some_model')
-      field: some_id
-~~~
-
-This avoids dbt generic-test deprecation warnings during local builds and CI.
-
-## Demo commands
-
-Fast fixture demo:
+Run the fast fixture demo:
 
 ~~~bash
 make demo-fixture
 ~~~
 
-Production local demo:
+Run the production local demo:
 
 ~~~bash
 make download-racedata
 make demo-latest
 ~~~
 
-The production demo uses the latest downloaded RaceData snapshot and generated local DuckDB/dbt outputs.
-
-Additional demo docs:
-
-~~~text
-docs/demo_walkthrough.md
-docs/interview_talking_points.md
-~~~
-
-## CI quality artifacts
-
-GitHub Actions uploads the generated fixture quality report as a workflow artifact:
-
-~~~text
-pitwall-quality-report
-~~~
-
-The artifact includes:
-
-~~~text
-latest_dbt_quality_summary.json
-latest_dbt_quality_summary.md
-run_results.json
-~~~
-
-This gives reviewers visible evidence that CI generated and validated the dbt quality report.
-
-## CI Dagster validation
-
-GitHub Actions validates Dagster orchestration with the fixture dataset:
+## Core commands
 
 ~~~bash
-make dagster-materialize-fixture
+make check                         # lint and unit tests
+make build-fixture-bronze          # convert fixture raw CSVs to bronze Parquet
+make dbt-build-fixture             # build dbt models using fixture bronze data
+make download-racedata             # download latest public RaceData archive locally
+make build-latest-racedata-bronze  # convert latest RaceData snapshot to bronze Parquet
+make dbt-build-latest              # build dbt models using production bronze data
+make quality-report                # generate dbt quality report
+make dagster-materialize-fixture   # orchestrate fixture pipeline with Dagster
+make dagster-materialize-latest    # orchestrate production pipeline with Dagster
+make streamlit-demo                # launch Streamlit demo
 ~~~
 
-This proves the Dagster asset graph can materialize bronze ingestion, dbt build, and quality report generation in CI.
+## Lakehouse layers
 
-Production Dagster mode remains local-only.
+### Bronze
+
+The bronze layer stores source CSV data as Parquet and records ingestion metadata.
+
+It tracks:
+
+- source files
+- raw row counts
+- bronze row counts
+- checksums
+- manifest metadata
+
+### Silver
+
+The silver layer creates typed facts and dimensions.
+
+Examples:
+
+- `dim_driver`
+- `dim_constructor`
+- `dim_circuit`
+- `dim_race`
+- `fact_race_result`
+- `fact_lap_time`
+- `fact_pit_stop`
+
+### Audit
+
+The audit layer exposes source anomalies and cleaning impact.
+
+Current audit models:
+
+- `audit_lap_time_duplicate_grain`
+- `audit_pit_stop_missing_duration`
+- `audit_result_nullable_numeric_fields`
+- `audit_source_to_silver_row_counts`
+
+This is one of the most important parts of the project: production data issues are not silently hidden.
+
+### Gold
+
+The gold layer contains analytics-ready marts.
+
+Current gold marts:
+
+- `mart_race_summary`
+- `mart_driver_pace`
+- `mart_pit_stop_efficiency`
+- `mart_constructor_reliability`
+- `mart_strategy_windows`
+- `mart_stint_degradation`
+- `mart_data_quality_run_summary`
+
+## Production data issues discovered
+
+Moving from fixture data to production RaceData exposed issues that required hardening:
+
+- duplicate lap-time rows at the race-driver-lap grain
+- missing pit-stop duration values
+- nullable numeric fields encoded as source strings
+- bronze-to-silver row-count differences caused by cleaning decisions
+
+The silver layer handles these issues. The audit layer preserves evidence of them.
+
+## Data quality
+
+dbt tests validate:
+
+- not-null constraints
+- uniqueness
+- relationships
+- fact table grain
+- mart grain
+
+The project generates a quality report from dbt artifacts:
+
+~~~text
+metadata/data_quality_reports/latest_dbt_quality_summary.json
+metadata/data_quality_reports/latest_dbt_quality_summary.md
+~~~
+
+Generated metadata stays local and is not committed.
+
+## CI
+
+GitHub Actions validates the fixture pipeline.
+
+CI runs:
+
+- Python linting
+- unit tests
+- fixture raw-to-bronze ingestion
+- dbt fixture build
+- quality report generation
+- Dagster fixture orchestration
+- quality artifact upload
+
+Production RaceData download is intentionally not run in CI because it depends on external data and should remain a local production-mode workflow.
+
+## Streamlit demo
+
+The Streamlit demo reads trusted outputs only.
+
+Sections:
+
+- Quality Evidence
+- Gold Marts
+- Audit Evidence
+- Portfolio Proof
+
+The app does not read raw CSVs directly.
+
+## Documentation
+
+Useful docs:
+
+~~~text
+docs/portfolio_case_study.md
+docs/demo_walkthrough.md
+docs/interview_talking_points.md
+docs/architecture.md
+docs/ingestion_design.md
+docs/data_source_assessment.md
+~~~
+
+## What this project proves
+
+PitWall Lakehouse demonstrates:
+
+- source ingestion design
+- reproducible local data processing
+- lakehouse-style layering
+- dbt modeling and testing
+- production data hardening
+- auditability
+- orchestration
+- CI hygiene
+- demo readiness
+
+## Limitations
+
+This is intentionally local-first and zero-cost.
+
+Current limitations:
+
+- no cloud object storage yet
+- no Docker image yet
+- no deployed production dashboard
+- no predictive ML layer
+- production RaceData is local-only
+- Streamlit is intentionally thin
+
+These are tradeoffs, not accidental gaps. The project focuses first on a trustworthy data foundation.
 
 ## Portfolio case study
 
-A recruiter/interviewer-friendly project write-up is available here:
+A recruiter/interviewer-friendly case study is available at:
 
 ~~~text
 docs/portfolio_case_study.md
 ~~~
-
-It explains the architecture, production data issues discovered, audit strategy, CI/orchestration, demo flow, limitations, and future improvements.
