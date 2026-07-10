@@ -393,3 +393,15 @@ run_results.json
 ~~~
 
 This gives reviewers visible evidence that CI generated and validated the dbt quality report.
+
+## CI Dagster validation
+
+GitHub Actions validates Dagster orchestration with the fixture dataset:
+
+~~~bash
+make dagster-materialize-fixture
+~~~
+
+This proves the Dagster asset graph can materialize bronze ingestion, dbt build, and quality report generation in CI.
+
+Production Dagster mode remains local-only.

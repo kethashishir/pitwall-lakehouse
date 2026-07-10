@@ -43,6 +43,10 @@ jobs:
       - name: Generate quality report
         run: make quality-report
 
+
+      - name: Materialize Dagster fixture assets
+        run: make dagster-materialize-fixture
+
       - name: Verify quality report
         run: |
           python - <<'PY'
