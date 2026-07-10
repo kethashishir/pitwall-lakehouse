@@ -290,3 +290,27 @@ A recruiter/interviewer-friendly case study is available at:
 ~~~text
 docs/portfolio_case_study.md
 ~~~
+
+## Docker
+
+Build the local Docker image:
+
+~~~bash
+make docker-build
+~~~
+
+Run checks inside Docker:
+
+~~~bash
+make docker-check
+~~~
+
+Run the fixture pipeline inside Docker:
+
+~~~bash
+make docker-fixture-pipeline
+~~~
+
+Docker mode validates the reproducible fixture path. Production RaceData download remains a local workflow.
+
+Docker Desktop or another Docker runtime must be installed and available on `PATH` before running Docker targets.

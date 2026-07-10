@@ -200,3 +200,11 @@ make dagster-materialize-fixture
 ~~~
 
 This checks that orchestration works independently of manual dbt commands while keeping production RaceData downloads out of CI.
+
+## Docker reproducibility
+
+Docker support is provided for reproducible fixture validation.
+
+Docker targets build the image, run Python checks, and execute the fixture dbt pipeline.
+
+Production RaceData download is intentionally not part of the default Docker workflow.

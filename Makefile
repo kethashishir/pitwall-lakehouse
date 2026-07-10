@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo demo-fixture demo-latest build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
+.PHONY: help install test lint format check docker-required docker-build docker-check docker-fixture-pipeline dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo demo-fixture demo-latest build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -7,6 +7,9 @@ help:
 	@echo "  make lint      Run ruff lint checks"
 	@echo "  make format    Format Python code with ruff"
 	@echo "  make check     Run lint and tests"
+	@echo "  make docker-build Build Docker image"
+	@echo "  make docker-check Run checks in Docker"
+	@echo "  make docker-fixture-pipeline Run fixture pipeline in Docker"
 	@echo "  make build-fixture-bronze  Build bronze Parquet from test fixture"
 	@echo "  make dbt-debug Run dbt debug against local DuckDB profile"
 	@echo "  make dbt-build Run dbt build against local DuckDB profile"
@@ -104,3 +107,16 @@ download-racedata:
 
 build-latest-racedata-bronze:
 	python -m pitwall.ingestion.build_latest_racedata_bronze
+
+docker-required:
+	@command -v docker >/dev/null 2>&1 || { echo "Docker is not installed or not on PATH. Install/start Docker Desktop, then rerun this target."; exit 127; }
+
+docker-build: docker-required
+	docker build -t pitwall-lakehouse:local .
+
+docker-check: docker-required
+	docker run --rm pitwall-lakehouse:local make check
+
+docker-fixture-pipeline: docker-required
+	docker run --rm pitwall-lakehouse:local sh -c "make check && make build-fixture-bronze && dbt deps --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt && make dbt-build-fixture && make quality-report"
+
