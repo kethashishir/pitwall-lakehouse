@@ -283,3 +283,9 @@ audit_source_to_silver_row_counts
 ~~~
 
 These models make cleaning decisions explainable instead of silent.
+
+## Streamlit audit evidence
+
+The Streamlit demo includes an Audit Evidence section that reads dbt audit models from DuckDB.
+
+This makes production source anomalies visible in the demo instead of hiding them in the transformation logic.
