@@ -330,3 +330,13 @@ docs/screenshots_checklist.md
 ~~~
 
 Recommended screenshots include Streamlit quality evidence, audit evidence, gold marts, GitHub Actions CI, CI artifacts, Dagster materialization, Docker fixture pipeline, and the README landing page.
+
+## Project health check
+
+Run a quick local project readiness check:
+
+~~~bash
+make project-health
+~~~
+
+This reports whether core project files, optional generated artifacts, and generated-artifact ignore rules are present.

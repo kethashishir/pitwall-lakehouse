@@ -214,3 +214,13 @@ Production RaceData download is intentionally not part of the default Docker wor
 Silver relationship tests and gold mart grain tests use the `arguments:` property for generic test arguments.
 
 Gold mart grain checks rely on `dbt_utils.unique_combination_of_columns` with current dbt-compatible syntax.
+
+## Project health check
+
+The project includes a lightweight health check command:
+
+~~~bash
+make project-health
+~~~
+
+It verifies key repository files, generated quality artifacts, DuckDB output presence, and `.gitignore` coverage for generated paths.
