@@ -129,6 +129,7 @@ make demo-latest
 ## Core commands
 
 ~~~bash
+make verify-fixture                # run full fixture validation
 make check                         # lint and unit tests
 make build-fixture-bronze          # convert fixture raw CSVs to bronze Parquet
 make dbt-build-fixture             # build dbt models using fixture bronze data
@@ -384,3 +385,13 @@ docs/data_usage_notice.md
 ~~~
 
 Public source data remains subject to the upstream data source terms. Generated local data artifacts are intentionally not committed.
+
+## One-command verification
+
+Run the full local fixture validation path:
+
+~~~bash
+make verify-fixture
+~~~
+
+This runs Python checks, fixture bronze ingestion, dbt fixture build, quality report generation, and project-health.

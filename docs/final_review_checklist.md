@@ -26,8 +26,7 @@ Run:
 
 ~~~bash
 make format
-make check
-make project-health
+make verify-fixture
 ~~~
 
 Expected:
@@ -35,6 +34,9 @@ Expected:
 - formatting succeeds
 - lint succeeds
 - unit tests pass
+- fixture bronze ingestion succeeds
+- dbt fixture build succeeds
+- quality report generation succeeds
 - project-health has no unexpected warnings
 
 ## 3. Fixture pipeline

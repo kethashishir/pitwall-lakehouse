@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check project-health docker-required docker-build docker-check docker-fixture-pipeline dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo demo-fixture demo-latest build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
+.PHONY: help install test lint format check verify-fixture project-health docker-required docker-build docker-check docker-fixture-pipeline dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo demo-fixture demo-latest build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -7,6 +7,7 @@ help:
 	@echo "  make lint      Run ruff lint checks"
 	@echo "  make format    Format Python code with ruff"
 	@echo "  make check     Run lint and tests"
+	@echo "  make verify-fixture Run full fixture validation"
 	@echo "  make project-health Print project health summary"
 	@echo "  make docker-build Build Docker image"
 	@echo "  make docker-check Run checks in Docker"
@@ -37,6 +38,14 @@ check: lint test
 
 project-health:
 	python -m pitwall.health
+
+verify-fixture:
+	$(MAKE) check
+	$(MAKE) build-fixture-bronze
+	dbt deps --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+	$(MAKE) dbt-build-fixture
+	$(MAKE) quality-report
+	$(MAKE) project-health
 
 build-fixture-bronze:
 	python -m pitwall.ingestion.raw_to_bronze \
