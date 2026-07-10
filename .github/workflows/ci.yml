@@ -58,3 +58,13 @@ jobs:
           print("quality report passed:", payload["passed"])
           print("total results:", payload["total_results"])
           PY
+
+      - name: Upload quality artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pitwall-quality-report
+          path: |
+            metadata/data_quality_reports/latest_dbt_quality_summary.json
+            metadata/data_quality_reports/latest_dbt_quality_summary.md
+            dbt/pitwall_dbt/target/run_results.json
+          if-no-files-found: error

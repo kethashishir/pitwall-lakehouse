@@ -375,3 +375,21 @@ Additional demo docs:
 docs/demo_walkthrough.md
 docs/interview_talking_points.md
 ~~~
+
+## CI quality artifacts
+
+GitHub Actions uploads the generated fixture quality report as a workflow artifact:
+
+~~~text
+pitwall-quality-report
+~~~
+
+The artifact includes:
+
+~~~text
+latest_dbt_quality_summary.json
+latest_dbt_quality_summary.md
+run_results.json
+~~~
+
+This gives reviewers visible evidence that CI generated and validated the dbt quality report.
