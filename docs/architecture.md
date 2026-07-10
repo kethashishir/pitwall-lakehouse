@@ -224,3 +224,13 @@ make project-health
 ~~~
 
 It verifies key repository files, generated quality artifacts, DuckDB output presence, and `.gitignore` coverage for generated paths.
+
+## Architecture diagram
+
+A Mermaid architecture diagram is available at:
+
+~~~text
+docs/architecture_diagram.md
+~~~
+
+It shows the end-to-end flow from public RaceData CSVs through bronze Parquet, dbt models, audit evidence, quality reports, Dagster orchestration, Streamlit, CI, and Docker validation.
