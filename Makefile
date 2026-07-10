@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build quality-report dagster-list dagster-materialize dagster-dev streamlit-demo build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-dev streamlit-demo build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -10,6 +10,8 @@ help:
 	@echo "  make build-fixture-bronze  Build bronze Parquet from test fixture"
 	@echo "  make dbt-debug Run dbt debug against local DuckDB profile"
 	@echo "  make dbt-build Run dbt build against local DuckDB profile"
+	@echo "  make dbt-build-fixture Run dbt build against fixture bronze data"
+	@echo "  make dbt-build-latest Run dbt build against latest production bronze data"
 	@echo "  make tree      Show project tree"
 	@echo "  make clean     Remove local caches"
 
@@ -41,6 +43,12 @@ dbt-debug:
 
 dbt-build:
 	dbt build --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+
+dbt-build-fixture:
+	dbt build --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt --vars '{"bronze_dataset": "racedata_sample"}'
+
+dbt-build-latest:
+	dbt build --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt --vars '{"bronze_dataset": "racedata_latest"}'
 
 quality-report:
 	python -m pitwall.quality.dbt_quality_report \

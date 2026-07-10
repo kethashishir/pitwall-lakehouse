@@ -243,3 +243,30 @@ make streamlit-demo
 ~~~
 
 The demo reads only trusted gold tables and generated quality reports. It does not read raw CSVs directly.
+
+## Fixture vs production dbt builds
+
+The dbt bronze layer is parameterized with a `bronze_dataset` variable.
+
+Build against the committed tiny fixture:
+
+~~~bash
+make build-fixture-bronze
+make dbt-build-fixture
+~~~
+
+Build against the latest downloaded production RaceData bronze files:
+
+~~~bash
+make download-racedata
+make build-latest-racedata-bronze
+make dbt-build-latest
+~~~
+
+The default dbt project variable is:
+
+~~~text
+bronze_dataset: racedata_sample
+~~~
+
+This keeps local smoke tests fast while still supporting real public-data builds.
