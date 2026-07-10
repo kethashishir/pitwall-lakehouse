@@ -366,3 +366,15 @@ docs/final_review_checklist.md
 ~~~
 
 It covers local checks, CI, Docker, Dagster, Streamlit, production mode, screenshots, resume packaging, and overclaim prevention.
+
+## License and data usage
+
+Project code is licensed under the MIT License.
+
+Data usage details are documented at:
+
+~~~text
+docs/data_usage_notice.md
+~~~
+
+Public source data remains subject to the upstream data source terms. Generated local data artifacts are intentionally not committed.
