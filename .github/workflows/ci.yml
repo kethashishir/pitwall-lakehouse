@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "phase-*"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  fixture-pipeline:
+    name: Fixture pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install project
+        run: make install
+
+      - name: Run Python checks
+        run: make check
+
+      - name: Build fixture bronze
+        run: make build-fixture-bronze
+
+      - name: Install dbt packages
+        run: dbt deps --project-dir dbt/pitwall_dbt --profiles-dir dbt/pitwall_dbt
+
+      - name: Build dbt fixture pipeline
+        run: make dbt-build-fixture
+
+      - name: Generate quality report
+        run: make quality-report
+
+      - name: Verify quality report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("metadata/data_quality_reports/latest_dbt_quality_summary.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+
+          assert payload["passed"] is True
+          assert payload["total_results"] == 106
+
+          print("quality report passed:", payload["passed"])
+          print("total results:", payload["total_results"])
+          PY

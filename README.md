@@ -319,3 +319,20 @@ Supported values:
 racedata_sample
 racedata_latest
 ~~~
+
+## Continuous integration
+
+GitHub Actions runs the fixture pipeline on pushes and pull requests.
+
+CI validates:
+
+~~~text
+Python linting
+unit tests
+fixture raw-to-bronze ingestion
+dbt fixture build
+dbt tests
+quality report generation
+~~~
+
+Production RaceData download is intentionally not run in CI because it depends on external network/data size and should remain a local production-mode workflow.
