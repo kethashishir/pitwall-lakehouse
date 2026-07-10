@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo demo-fixture demo-latest build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -72,6 +72,18 @@ dagster-dev:
 
 streamlit-demo:
 	python -m streamlit run dashboard/streamlit_app/app.py
+
+demo-fixture:
+	$(MAKE) build-fixture-bronze
+	$(MAKE) dbt-build-fixture
+	$(MAKE) quality-report
+	$(MAKE) streamlit-demo
+
+demo-latest:
+	$(MAKE) build-latest-racedata-bronze
+	$(MAKE) dbt-build-latest
+	$(MAKE) quality-report
+	$(MAKE) streamlit-demo
 
 
 tree:
