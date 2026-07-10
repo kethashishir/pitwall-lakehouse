@@ -348,3 +348,13 @@ Resume bullets, LinkedIn copy, recruiter messaging, and interview talking points
 ~~~text
 docs/career_packaging.md
 ~~~
+
+## Final review checklist
+
+Before sharing the project publicly, use:
+
+~~~text
+docs/final_review_checklist.md
+~~~
+
+It covers local checks, CI, Docker, Dagster, Streamlit, production mode, screenshots, resume packaging, and overclaim prevention.
