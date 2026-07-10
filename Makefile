@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-dev streamlit-demo build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build dbt-build-fixture dbt-build-latest quality-report dagster-list dagster-materialize dagster-materialize-fixture dagster-materialize-latest dagster-dev streamlit-demo build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -60,6 +60,12 @@ dagster-list:
 
 dagster-materialize:
 	dagster asset materialize --select "*" -m orchestration.dagster_project.definitions
+
+dagster-materialize-fixture:
+	PITWALL_BRONZE_DATASET=racedata_sample dagster asset materialize --select "*" -m orchestration.dagster_project.definitions
+
+dagster-materialize-latest:
+	PITWALL_BRONZE_DATASET=racedata_latest dagster asset materialize --select "*" -m orchestration.dagster_project.definitions
 
 dagster-dev:
 	dagster dev -m orchestration.dagster_project.definitions

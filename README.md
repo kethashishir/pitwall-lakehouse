@@ -289,3 +289,33 @@ These models make cleaning decisions explainable instead of silent.
 The Streamlit demo includes an Audit Evidence section that reads dbt audit models from DuckDB.
 
 This makes production source anomalies visible in the demo instead of hiding them in the transformation logic.
+
+## Dagster dataset modes
+
+Dagster can materialize either the tiny fixture dataset or the latest downloaded production RaceData snapshot.
+
+Fixture mode:
+
+~~~bash
+make dagster-materialize-fixture
+~~~
+
+Production mode:
+
+~~~bash
+make download-racedata
+make dagster-materialize-latest
+~~~
+
+The selected dataset is controlled by:
+
+~~~text
+PITWALL_BRONZE_DATASET
+~~~
+
+Supported values:
+
+~~~text
+racedata_sample
+racedata_latest
+~~~
