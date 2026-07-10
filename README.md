@@ -405,3 +405,13 @@ make dagster-materialize-fixture
 This proves the Dagster asset graph can materialize bronze ingestion, dbt build, and quality report generation in CI.
 
 Production Dagster mode remains local-only.
+
+## Portfolio case study
+
+A recruiter/interviewer-friendly project write-up is available here:
+
+~~~text
+docs/portfolio_case_study.md
+~~~
+
+It explains the architecture, production data issues discovered, audit strategy, CI/orchestration, demo flow, limitations, and future improvements.
