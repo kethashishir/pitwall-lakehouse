@@ -1,2 +1,2 @@
 select *
-from read_parquet('data/bronze/racedata_sample/constructors.parquet')
+from read_parquet('data/bronze/{{ var("bronze_dataset") }}/constructors.parquet')

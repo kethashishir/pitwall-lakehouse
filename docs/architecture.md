@@ -94,3 +94,29 @@ Gold marts now cover:
 - row-count summaries across bronze, silver, and gold
 
 The current marts run against the committed fixture. Full historical analysis requires the production source archive ingestion phase.
+
+## Fixture and production bronze inputs
+
+The dbt bronze models read Parquet from:
+
+~~~text
+data/bronze/{{ var("bronze_dataset") }}/
+~~~
+
+Supported local values:
+
+- racedata_sample: tiny committed fixture converted to bronze
+- racedata_latest: latest downloaded production RaceData archive converted to bronze
+
+This allows the same dbt model graph to run against both a fast test fixture and the real public dataset.
+
+## Production data hardening
+
+The production RaceData build exposed source issues that were not visible in the tiny fixture:
+
+- `\\N` missing-value markers in numeric fields
+- duplicate lap-time rows at the race-driver-lap grain
+
+Silver models use safer casting with `try_cast(nullif(..., '\\N'))`.
+
+`fact_lap_time` currently deduplicates repeated race-driver-lap rows deterministically by keeping the lowest lap-time milliseconds value, then lowest available position. A later quality phase should add a dedicated duplicate audit model/report so these source anomalies are visible instead of silently hidden.
