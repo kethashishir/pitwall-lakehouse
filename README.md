@@ -340,3 +340,11 @@ make project-health
 ~~~
 
 This reports whether core project files, optional generated artifacts, and generated-artifact ignore rules are present.
+
+## Career packaging
+
+Resume bullets, LinkedIn copy, recruiter messaging, and interview talking points are available at:
+
+~~~text
+docs/career_packaging.md
+~~~
