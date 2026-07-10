@@ -57,3 +57,6 @@ dbt/**/dbt_packages/
 
 # Dagster local artifacts
 .dagster/
+
+# Streamlit local config
+.streamlit/

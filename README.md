@@ -24,7 +24,7 @@ This is not intended to be a generic Formula 1 dashboard or CRUD app.
 
 ## Current status
 
-Phase 7: expanded gold strategy and quality marts.
+Phase 8: Streamlit demo over trusted gold outputs.
 
 Implemented:
 
@@ -47,6 +47,7 @@ Implemented:
 - generated dbt data-quality summary reports
 - Dagster assets for bronze ingestion, dbt build, and quality reporting
 - expanded gold marts for reliability, strategy windows, stint degradation, and row-count summaries
+- Streamlit demo reading trusted gold outputs and quality reports
 
 Not implemented yet:
 
@@ -226,3 +227,19 @@ mart_data_quality_run_summary
 ~~~
 
 These marts are currently validated against the tiny fixture. They prove the transformation structure, not full historical F1 conclusions yet.
+
+## Streamlit demo
+
+Before launching the demo, materialize the local pipeline:
+
+~~~bash
+make dagster-materialize
+~~~
+
+Then launch Streamlit:
+
+~~~bash
+make streamlit-demo
+~~~
+
+The demo reads only trusted gold tables and generated quality reports. It does not read raw CSVs directly.
