@@ -320,3 +320,13 @@ Docker Desktop or another Docker runtime must be installed and available on `PAT
 Silver relationship tests and gold mart grain tests use dbt's current `arguments:` syntax for generic test arguments.
 
 This keeps local, Docker, and CI dbt output free of avoidable generic-test deprecation warnings.
+
+## Screenshots
+
+A screenshot checklist is available at:
+
+~~~text
+docs/screenshots_checklist.md
+~~~
+
+Recommended screenshots include Streamlit quality evidence, audit evidence, gold marts, GitHub Actions CI, CI artifacts, Dagster materialization, Docker fixture pipeline, and the README landing page.
