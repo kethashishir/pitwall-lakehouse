@@ -395,3 +395,13 @@ make verify-fixture
 ~~~
 
 This runs Python checks, fixture bronze ingestion, dbt fixture build, quality report generation, and project-health.
+
+## Release checklist
+
+A v1.0-style release checklist is available at:
+
+~~~text
+docs/release_checklist.md
+~~~
+
+Use it before tagging or publicly launching the project.
