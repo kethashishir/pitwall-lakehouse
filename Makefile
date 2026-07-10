@@ -1,4 +1,4 @@
-.PHONY: help install test lint format check dbt-debug dbt-build quality-report dagster-list dagster-materialize dagster-dev streamlit-demo build-fixture-bronze tree clean
+.PHONY: help install test lint format check dbt-debug dbt-build quality-report dagster-list dagster-materialize dagster-dev streamlit-demo build-fixture-bronze download-racedata build-latest-racedata-bronze tree clean
 
 help:
 	@echo "PitWall Lakehouse commands:"
@@ -70,3 +70,11 @@ tree:
 clean:
 	rm -rf .pytest_cache .ruff_cache htmlcov .coverage
 	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
+
+download-racedata:
+	python -m pitwall.ingestion.download_racedata \
+		--raw-root-dir data/raw/racedata \
+		--manifest-dir metadata/ingestion_manifests
+
+build-latest-racedata-bronze:
+	python -m pitwall.ingestion.build_latest_racedata_bronze
